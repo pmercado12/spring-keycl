@@ -15,14 +15,19 @@ export M2_HOME=/media/pmercado/hd2/programas/apache-maven-3.9.9
 REALMS
 local-realm
 
+REALM ROLES
+local-entidad-realmrol
+local-proveedor-realmrol
+
+CLIENTS
+local-sicoes-client
+
+CLIENT ROLES
+998  OPERADOR DE UNIDAD SOLICITANTE
+1000 APROBADOR DE UNIDAD SOLICITANTE
+
 USER
 4833200-user
 external-user
 
-REALM ROLES
-local-entidad-realmrol
-local-publico-realmrol
-
-CLIENTS
-local-sicoes-pac-client
-local-sicoes-us-client
+http://localhost:8080/realms/local-realm/account

@@ -1,4 +1,4 @@
-services:  
+services:
   myDB:
     image: postgres:15.15
     container_name: my-database
@@ -10,9 +10,10 @@ services:
       POSTGRES_PASSWORD: ${KC_DB_PASSWORD}
       POSTGRES_DB: ${KC_DB}
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+
   keycloak:
-    image: quay.io/keycloak/keycloak:26.5.2    
+    image: quay.io/keycloak/keycloak:26.5.2
     restart: always
     ports:
       - "8080:8080"
@@ -23,12 +24,12 @@ services:
       KC_DB_URL: ${KC_DB_URL}
       KC_DB_USERNAME: ${KC_DB_USERNAME}
       KC_DB_PASSWORD: ${KC_DB_PASSWORD}
-    depends_on: 
+    depends_on:
       - myDB
     volumes:
-      - ./keycloak:/opt/keycloak/data
+      - keycloak_data:/opt/keycloak/data
     command: ["start-dev", "--import-realm"]
-      
+
   pdAdmin:
     image: dpage/pgadmin4
     container_name: pgadmin4
@@ -38,10 +39,15 @@ services:
     ports:
       - "8181:80"
     environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     volumes:
-      - ./pgadmin/data:/var/lib/pgadmin
-      - ./pgadmin/servers.json:/pgadmin4/servers.json
-      - ./pgadmin/certs/server.cert:/certs/server.cert
-      - ./pgadmin/certs/server.key:/certs/server.key    
+      - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+      - ./pgadmin/certs/server.cert:/certs/server.cert:ro
+      - ./pgadmin/certs/server.key:/certs/server.key:ro
+
+volumes:
+  postgres_data:
+  keycloak_data:
+  pgadmin_data:
